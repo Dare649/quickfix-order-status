@@ -78,9 +78,9 @@ const Home = () => {
         Enter your Order ID
       </h2>
 
-      <div className="flex lg:flex-row sm:flex-col items-center justify-center mx-auto">
-        <div className="flex items-center gap-x-4 mt-5">
-          <div className="w-full p-2 border-[2.5px] border-gray-400 rounded-md flex items-center gap-x-2 transition-colors focus-within:border-green-500">
+      <div className="flex lg:flex-row sm:flex-col items-center justify-center lg:mx-[20%] sm:mx-0">
+        <div className="w-full flex lg:flex-row sm:flex-col items-center gap-4 mt-5 sm:px-2 lg:px-0">
+          <div className="sm:w-full lg:w-[70%] p-2 border-[2.5px] border-gray-400 rounded-md flex items-center gap-x-2 transition-colors focus-within:border-green-500">
             <CiSearch />
             <input
               type="text"
@@ -91,7 +91,7 @@ const Home = () => {
             />
           </div>
           <button
-            className="bg-primary-2 text-white font-bold rounded-md text-center px-7 capitalize py-3 cursor-pointer"
+            className="sm:w-full lg:w-[30%] bg-primary-2 text-white font-bold rounded-md text-center px-7 capitalize py-3 cursor-pointer"
             onClick={handleSearch}
             disabled={loading}
           >
@@ -156,7 +156,7 @@ const Home = () => {
            
             <div className="py-3">
               <h4 className="text-primary-1 uppercase font-bold text-xs">items</h4>
-              <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 gap-3">
+              <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 gap-3 ">
                 {orderDetails.items.map((item, index) => (
                     <h2 
                       key={index}
