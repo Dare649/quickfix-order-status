@@ -1,101 +1,172 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { CiSearch } from "react-icons/ci";
+import axiosInstance from "@/service/axios";
+import { toast } from "react-toastify";
+
+// Define the structure of the order response
+interface OrderItem {
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface OrderDetails {
+  _id: string;
+  order_id: string;
+  description: string;
+  items: OrderItem[];
+  amount: number;
+  delivery_fee: number;
+  user: string;
+  service: string;
+  transaction: string;
+  location: string;
+  pickup_date: string;
+  address: string;
+  landmark: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const Home = () => {
+  const [orderId, setOrderId] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const STATUS_STEPS = ["Pending", "Washed", "Ironed", "Packaged", "Delivered"];
+
+  const handleSearch = async () => {
+    if (!orderId.trim()) {
+      toast.error("Please enter a valid order ID.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axiosInstance.post<OrderDetails>(`/orders/track`, { order_id: orderId });
+
+      setOrderDetails(response.data); // Store the response data
+      setIsModalOpen(true); // Show the modal
+    } catch (error) {
+      toast.error("An error occurred while fetching orders.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusIndex = (status: string) => STATUS_STEPS.indexOf(status.charAt(0).toUpperCase() + status.slice(1));
+
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="w-full mt-10">
+      <h2 className="text-center font-bold text-xl text-gray-500">
+        Enter your Order ID
+      </h2>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      <div className="flex lg:flex-row sm:flex-col items-center justify-center mx-auto">
+        <div className="flex items-center gap-x-4 mt-5">
+          <div className="w-full p-2 border-[2.5px] border-gray-400 rounded-md flex items-center gap-x-2 transition-colors focus-within:border-green-500">
+            <CiSearch />
+            <input
+              type="text"
+              className="outline-none border-none w-full bg-transparent focus:ring-0"
+              placeholder="Enter order ID"
+              value={orderId}
+              onChange={(e) => setOrderId(e.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+          <button
+            className="bg-primary-2 text-white font-bold rounded-md text-center px-7 capitalize py-3 cursor-pointer"
+            onClick={handleSearch}
+            disabled={loading}
           >
-            Read our docs
-          </a>
+            {loading ? "Searching..." : "Search"}
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* Modal Popup */}
+      {isModalOpen && orderDetails && (
+        <div className="fixed inset-0 bg-primary-3/50 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+
+            {/* Status Progress Bar */}
+            <div className="lg:py-5 sm:py-3">
+              <h4 className="text-gray-700 uppercase font-bold text-sm">order status</h4>
+              <div className="flex items-center justify-between mt-2 w-full relative">
+                {STATUS_STEPS.map((step, index) => {
+                  const isActive = getStatusIndex(orderDetails.status) >= index;
+                  return (
+                    <div key={index} className="relative flex flex-1 flex-col items-center">
+                      
+                      {/* Status Circle */}
+                      <div className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${isActive ? "bg-green-500" : "bg-gray-300"}`}>
+                        {index + 1}
+                      </div>
+                      <span className="text-xs text-center mt-1 text-gray-600">{step}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            
+            <hr  className="w-full bg-gray-700 h-0.5"/>
+            <h4 className="text-gray-700 uppercase font-bold text-sm py-3">order details</h4>
+            <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 gap-5 ">
+              <div>
+                <h4 className="text-primary-1 uppercase font-bold text-xs">order ID</h4>
+                <h2 className="font-bold text-sm text-gray-500">{orderDetails.order_id}</h2>
+              </div>
+              <div>
+                <h4 className="text-primary-1 uppercase font-bold text-xs">description</h4>
+                <h2 className="font-bold text-sm text-gray-500">{orderDetails.description}</h2>
+              </div>
+              <div>
+                <h4 className="text-primary-1 uppercase font-bold text-xs">amount</h4>
+                <h2 className="font-bold text-sm text-gray-500">{orderDetails.amount}</h2>
+              </div>
+              <div>
+                <h4 className="text-primary-1 uppercase font-bold text-xs">delivery fee</h4>
+                <h2 className="font-bold text-sm text-gray-500">{orderDetails.delivery_fee}</h2>
+              </div>
+              <div>
+                <h4 className="text-primary-1 uppercase font-bold text-xs">address</h4>
+                <h2 className="font-bold text-sm text-gray-500">{orderDetails.address}</h2>
+              </div>
+              <div>
+                <h4 className="text-primary-1 uppercase font-bold text-xs">order ID</h4>
+                <h2 className="font-bold text-sm text-gray-500">{orderDetails.order_id}</h2>
+              </div>
+            </div>
+           
+            <div className="py-3">
+              <h4 className="text-primary-1 uppercase font-bold text-xs">items</h4>
+              <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 gap-3">
+                {orderDetails.items.map((item, index) => (
+                    <h2 
+                      key={index}
+                      className="font-bold text-sm text-gray-500"
+                    >
+                      {item.name} - ${item.price} (x{item.quantity})
+                    </h2>
+                  ))}
+              </div>
+            </div>
+            
+            <button
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default Home;
