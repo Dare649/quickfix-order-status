@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import axiosInstance from "@/service/axios";
 import { toast } from "react-toastify";
+import { TbCurrencyNaira } from "react-icons/tb";
 
 // Define the structure of the order response
 interface OrderItem {
@@ -59,6 +60,17 @@ const Home = () => {
 
   const getStatusIndex = (status: string) => STATUS_STEPS.indexOf(status.charAt(0).toUpperCase() + status.slice(1));
 
+  const formatAmountWithCommas = (price: number | string): string => {
+    if (price === "" || price === null || price === undefined) {
+      return "";
+    }
+  
+    const numericPrice = typeof price === "number" ? price : parseFloat(price.toString().replace(/,/g, ""));
+  
+    return isNaN(numericPrice) ? "" : numericPrice.toLocaleString();
+  };
+  
+
 
   return (
     <div className="w-full mt-10">
@@ -90,8 +102,8 @@ const Home = () => {
 
       {/* Modal Popup */}
       {isModalOpen && orderDetails && (
-        <div className="fixed inset-0 bg-primary-3/50 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+        <div className="fixed inset-0 bg-primary-3/50 bg-opacity-50 flex justify-center items-center ">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full ">
 
             {/* Status Progress Bar */}
             <div className="lg:py-5 sm:py-3">
@@ -150,7 +162,7 @@ const Home = () => {
                       key={index}
                       className="font-bold text-sm text-gray-500"
                     >
-                      {item.name} - ${item.price} (x{item.quantity})
+                      {item.name} - <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(item.price)}</span> (x{item.quantity})
                     </h2>
                   ))}
               </div>
