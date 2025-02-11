@@ -106,7 +106,7 @@ const Home = () => {
               onChange={(e) => setOrderId(e.target.value)}
             />
             <button
-              className={`lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center justify-center lg:gap-x-2 sm:gap-x-1 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[40%]' : ''}`}
+              className={`lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center justify-center lg:gap-x-2 sm:gap-x-0 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[40%]' : ''}`}
               onClick={handleSearch}
               disabled={loading}
             >
@@ -186,7 +186,7 @@ const Home = () => {
           isModalOpen && orderDetails && (
             <div
               className="fixed inset-0 bg-primary-3/50 lg:p-0 sm:p-2 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white lg:p-10 sm:p-3 rounded-4xl shadow-lg lg:w-[60%] sm:w-full">
+              <div className="bg-white lg:p-10 sm:pt-8 sm:px-4 sm:pb-4 rounded-4xl shadow-lg lg:w-[60%] sm:w-full">
                 <div
                   onClick={handleModal}
                   className="flex float-end cursor-pointer"
