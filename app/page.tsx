@@ -82,8 +82,8 @@ const Home = () => {
   return (
     <div className="w-full ">
       <div 
-        className={`flex flex-col items-center justify-center min-h-screen lg:px-4 sm:px-2 transition-all duration-300  
-          ${orderDetails ? 'lg:w-[60%] sm:w-full mx-auto' : 'lg:w-[80%] sm:w-full mx-auto'}
+        className={`flex flex-col items-center justify-center min-h-screen lg:p-4 sm:p-4 transition-all duration-300  
+          ${orderDetails ? 'lg:w-[50%] sm:w-full mx-auto' : 'lg:w-[60%] sm:w-full mx-auto'}
         `}
       >
           <Image
@@ -106,7 +106,7 @@ const Home = () => {
               onChange={(e) => setOrderId(e.target.value)}
             />
             <button
-              className={`lg:w-[20%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center lg:gap-x-2 sm:gap-x-1 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[30%]' : ''}`}
+              className={`lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center justify-center lg:gap-x-2 sm:gap-x-1 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[40%]' : ''}`}
               onClick={handleSearch}
               disabled={loading}
             >
