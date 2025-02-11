@@ -82,8 +82,8 @@ const Home = () => {
   return (
     <div className="w-full ">
       <div 
-        className={`sm:w-full lg:w-[70%] sm:px-1 lg:px-0 flex flex-col items-center justify-center lg:mx-auto sm:mx-0 
-          ${orderDetails ? 'lg:mt-[5%] sm:mt-[8%]' : 'lg:mt-[30%] sm:mt-[30%]'}
+        className={`flex flex-col items-center justify-center min-h-screen lg:px-4 sm:px-2 transition-all duration-300  
+          ${orderDetails ? 'lg:w-[60%] sm:w-full mx-auto' : 'w-[80%] mx-auto'}
         `}
       >
           <Image
@@ -94,19 +94,19 @@ const Home = () => {
             className={`transition-all duration-300 ${orderDetails ? 'lg:mt-[-1%] sm:mt-[-2%]' : ''}`}
           />
           <div 
-            className={`w-full p-2 border-[2.5px] border-primary-1 rounded-4xl flex items-center gap-x-2 transition-all duration-300 focus-within:border-primary-1
+            className={`w-full p-2 border-[1.5px] border-primary-1 rounded-[3rem] flex items-center gap-x-2 transition-all duration-300 focus-within:border-primary-1 bg-primary-6
             ${orderDetails ? 'lg:mt-[2%] sm:mt-[3%]' : 'lg:mt-[5%] sm:mt-[3%]'}
           `}
           >
             <input
               type="text"
-              className="outline-none border-none w-full bg-transparent focus:ring-0 lg:px-4 sm:px-2 lg:text-base sm:text-sm"
+              className="outline-none border-none w-full bg-transparent focus:ring-0 lg:px-4 sm:px-2 lg:text-base sm:text-[10px]"
               placeholder="Enter order ID EX: 0AFVYY4"
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
             />
             <button
-              className="lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center lg:gap-x-2 sm:gap-x-1 text-white font-bold rounded-4xl text-center capitalize cursor-pointer"
+              className={`lg:w-[20%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center lg:gap-x-2 sm:gap-x-1 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[30%]' : ''}`}
               onClick={handleSearch}
               disabled={loading}
             >
@@ -120,7 +120,7 @@ const Home = () => {
           </div>
           {/* Modal Popup */}
       { orderDetails && (
-        <div className="bg-white p-3 shadow-lg border-primary-1 border-[2.5px] mt-[3%] rounded-4xl w-full ">
+        <div className="bg-primary-6 p-3 shadow-lg border-primary-1 border-[1.5px] mt-[3%] rounded-4xl w-full ">
 
         {/* Status Progress Bar */}
         <div className="lg:p-10 sm:p-3 border-primary-1 rounded-2xl w-full">
@@ -137,7 +137,7 @@ const Home = () => {
                 />
               </div>
               <div>
-                <h2 className="text-secondary-1 flex lg:gap-x-2 sm:gap-x-1 font-bold lg:text-base sm:text-xs">
+                <h2 className="text-secondary-1 flex lg:gap-x-2 sm:gap-x-1 font-bold lg:text-md sm:text-xs">
                   <span className="first-letter:capitalize">order ID:</span>
                   <span>{orderDetails.order_id}</span>
                 </h2>
@@ -154,7 +154,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex flex-col w-full sm:ml-3">
+          <div className="flex flex-col w-full sm:ml-3 ">
             {STATUS_STEPS.map((step, index) => {
               const isActive = getStatusIndex(orderDetails.status) >= index;
               return (
@@ -179,15 +179,15 @@ const Home = () => {
         </div>
       </div>
       )}
-        </div>
+      </div>
         {
           isModalOpen && orderDetails && (
             <div
               className="fixed inset-0 bg-primary-3/50 lg:p-0 sm:p-2 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white lg:p-10 sm:p-3 rounded-4xl shadow-lg lg:w-[60%] sm:w-full ">
+              <div className="bg-white lg:p-10 sm:p-3 rounded-4xl shadow-lg lg:w-[60%] sm:w-full">
                 <div
                   onClick={handleModal}
-                  className="flex float-end"
+                  className="flex float-end cursor-pointer"
                 >
                   <IoMdCloseCircleOutline size={30}/>
                 </div>
@@ -201,22 +201,22 @@ const Home = () => {
                       className="w-full"
                     />
                   </div>
-                  <h2 className="text-secondary-1 font-bold flex items-center gap-x-1 lg:text-base sm:text-sm">
+                  <h2 className="text-secondary-1 font-medium flex items-center gap-x-1 lg:text-md sm:text-[10px]">
                     <span className="first-letter:capitalize">order ID:</span>
                     <span>{orderDetails.order_id}</span>
                   </h2>
                 </div>
-                <div className="lg:py-10 sm:py-5">
-                  <div className="w-full border-2 border-primary-1 rounded-2xl lg:p-7 sm:p-2">
+                <div className="lg:py-10 sm:py-5 ">
+                  <div className="w-full border-[1.5px] border-primary-1  bg-primary-6 rounded-2xl lg:p-7 sm:p-2">
                     <div>
                       {orderDetails.items.map((item, index) => (
                         <div 
                           key={index}
                           className="w-full flex items-center justify-between lg:text-lg sm:text-xs lg:py-3 sm:py-1"
                         >
-                          <h2 className="text-bold capitalize">{item.name}</h2> 
-                          <h2 className="text-primary-2 flex items-center gap-x-2 font-bold text-right">
-                            <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(item.price)}</span>
+                          <h2 className="capitalize">{item.name}</h2> 
+                          <h2 className="text-primary-2 flex items-center gap-x-2 font-medium text-right">
+                            <span className="flex items-center"><TbCurrencyNaira size={18}/>{formatAmountWithCommas(item.price)}</span>
                             <span>x</span>
                             <span>{item.quantity}</span>
                           </h2>
@@ -224,18 +224,18 @@ const Home = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="flex flex-col items-end text-right lg:text-xl sm:text-sm">
-                      <h2 className="flex justify-end items-center font-bold capitalize text-primary-2">
+                    <div className="flex flex-col items-end text-right lg:text-lg sm:text-xs mt-3">
+                      <h2 className="flex justify-end items-center font-medium capitalize text-primary-2 mb-3">
                         <span className="mr-2">sub total:</span>
-                        <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(orderDetails.amount)}</span>
+                        <span className="flex items-center"><TbCurrencyNaira size={18}/>{formatAmountWithCommas(orderDetails.amount)}</span>
                       </h2>
-                      <h2 className="flex justify-end items-center font-bold capitalize text-primary-2">
+                      <h2 className="flex justify-end items-center font-medium capitalize text-primary-2 mb-3">
                         <span className="mr-2">delivery fee:</span>
-                        <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(orderDetails.delivery_fee)}</span>
+                        <span className="flex items-center"><TbCurrencyNaira size={18}/>{formatAmountWithCommas(orderDetails.delivery_fee)}</span>
                       </h2>
-                      <h2 className="flex justify-end items-center font-bold capitalize text-primary-2">
+                      <h2 className="flex justify-end items-center font-medium capitalize text-primary-2 mb-3">
                         <span className="mr-2">total:</span>
-                        <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(orderDetails.amount + orderDetails.delivery_fee)}</span>
+                        <span className="flex items-center"><TbCurrencyNaira size={18}/>{formatAmountWithCommas(orderDetails.amount + orderDetails.delivery_fee)}</span>
                       </h2>
                     </div>
 
