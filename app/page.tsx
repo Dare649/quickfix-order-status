@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { CiSearch } from "react-icons/ci";
+import { RiSendPlaneLine } from "react-icons/ri";
 import axiosInstance from "@/service/axios";
 import { toast } from "react-toastify";
 import { TbCurrencyNaira } from "react-icons/tb";
+import { FaArrowRightLong, FaCheck } from "react-icons/fa6";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import Image from "next/image";
 
 // Define the structure of the order response
 interface OrderItem {
@@ -50,13 +53,17 @@ const Home = () => {
       const response = await axiosInstance.post<OrderDetails>(`/orders/track`, { order_id: orderId });
 
       setOrderDetails(response.data); // Store the response data
-      setIsModalOpen(true); // Show the modal
     } catch (error) {
       toast.error("An error occurred while fetching orders.");
     } finally {
       setLoading(false);
     }
   };
+
+  // function to open modal
+  const handleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  }
 
   const getStatusIndex = (status: string) => STATUS_STEPS.indexOf(status.charAt(0).toUpperCase() + status.slice(1));
 
@@ -73,110 +80,171 @@ const Home = () => {
 
 
   return (
-    <div className="w-full mt-10">
-      <h2 className="text-center font-bold text-xl text-gray-500">
-        Enter your Order ID
-      </h2>
-
-      <div className="flex lg:flex-row sm:flex-col items-center justify-center lg:mx-[20%] sm:mx-0">
-        <div className="w-full flex lg:flex-row sm:flex-col items-center gap-4 mt-5 sm:px-2 lg:px-0">
-          <div className="sm:w-full lg:w-[70%] p-2 border-[2.5px] border-gray-400 rounded-md flex items-center gap-x-2 transition-colors focus-within:border-green-500">
-            <CiSearch />
+    <div className="w-full ">
+      <div 
+        className={`sm:w-full lg:w-[70%] sm:px-1 lg:px-0 flex flex-col items-center justify-center lg:mx-auto sm:mx-0 
+          ${orderDetails ? 'lg:mt-[5%] sm:mt-[8%]' : 'lg:mt-[30%] sm:mt-[30%]'}
+        `}
+      >
+          <Image
+            src='/logo.png'
+            alt='QuickFix'
+            width={200} 
+            height={200}
+            className={`transition-all duration-300 ${orderDetails ? 'lg:mt-[-1%] sm:mt-[-2%]' : ''}`}
+          />
+          <div 
+            className={`w-full p-2 border-[2.5px] border-primary-1 rounded-4xl flex items-center gap-x-2 transition-all duration-300 focus-within:border-primary-1
+            ${orderDetails ? 'lg:mt-[2%] sm:mt-[3%]' : 'lg:mt-[5%] sm:mt-[3%]'}
+          `}
+          >
             <input
               type="text"
-              className="outline-none border-none w-full bg-transparent focus:ring-0"
-              placeholder="Enter order ID"
+              className="outline-none border-none w-full bg-transparent focus:ring-0 lg:px-4 sm:px-2 lg:text-base sm:text-sm"
+              placeholder="Enter order ID EX: 0AFVYY4"
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
             />
-          </div>
-          <button
-            className="sm:w-full lg:w-[30%] bg-primary-2 text-white font-bold rounded-md text-center px-7 capitalize py-3 cursor-pointer"
-            onClick={handleSearch}
-            disabled={loading}
-          >
-            {loading ? "Searching..." : "Search"}
-          </button>
-        </div>
-      </div>
-
-      {/* Modal Popup */}
-      {isModalOpen && orderDetails && (
-        <div className="fixed inset-0 bg-primary-3/50 bg-opacity-50 flex justify-center items-center ">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full ">
-
-            {/* Status Progress Bar */}
-            <div className="lg:py-5 sm:py-3">
-              <h4 className="text-gray-700 uppercase font-bold text-sm">order status</h4>
-              <div className="flex items-center justify-between mt-2 w-full relative">
-                {STATUS_STEPS.map((step, index) => {
-                  const isActive = getStatusIndex(orderDetails.status) >= index;
-                  return (
-                    <div key={index} className="relative flex flex-1 flex-col items-center">
-                      
-                      {/* Status Circle */}
-                      <div className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${isActive ? "bg-green-500" : "bg-gray-300"}`}>
-                        {index + 1}
-                      </div>
-                      <span className="text-xs text-center mt-1 text-gray-600">{step}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            
-            <hr  className="w-full bg-gray-700 h-0.5"/>
-            <h4 className="text-gray-700 uppercase font-bold text-sm py-3">order details</h4>
-            <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 gap-5 ">
-              <div>
-                <h4 className="text-primary-1 uppercase font-bold text-xs">order ID</h4>
-                <h2 className="font-bold text-sm text-gray-500">{orderDetails.order_id}</h2>
-              </div>
-              <div>
-                <h4 className="text-primary-1 uppercase font-bold text-xs">description</h4>
-                <h2 className="font-bold text-sm text-gray-500">{orderDetails.description}</h2>
-              </div>
-              <div>
-                <h4 className="text-primary-1 uppercase font-bold text-xs">amount</h4>
-                <h2 className="font-bold text-sm text-gray-500">{orderDetails.amount}</h2>
-              </div>
-              <div>
-                <h4 className="text-primary-1 uppercase font-bold text-xs">delivery fee</h4>
-                <h2 className="font-bold text-sm text-gray-500">{orderDetails.delivery_fee}</h2>
-              </div>
-              <div>
-                <h4 className="text-primary-1 uppercase font-bold text-xs">address</h4>
-                <h2 className="font-bold text-sm text-gray-500">{orderDetails.address}</h2>
-              </div>
-              <div>
-                <h4 className="text-primary-1 uppercase font-bold text-xs">order ID</h4>
-                <h2 className="font-bold text-sm text-gray-500">{orderDetails.order_id}</h2>
-              </div>
-            </div>
-           
-            <div className="py-3">
-              <h4 className="text-primary-1 uppercase font-bold text-xs">items</h4>
-              <div className="w-full grid lg:grid-cols-4 sm:grid-cols-2 gap-3 ">
-                {orderDetails.items.map((item, index) => (
-                    <h2 
-                      key={index}
-                      className="font-bold text-sm text-gray-500"
-                    >
-                      {item.name} - <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(item.price)}</span> (x{item.quantity})
-                    </h2>
-                  ))}
-              </div>
-            </div>
-            
             <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md"
-              onClick={() => setIsModalOpen(false)}
+              className="lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center lg:gap-x-2 sm:gap-x-1 text-white font-bold rounded-4xl text-center capitalize cursor-pointer"
+              onClick={handleSearch}
+              disabled={loading}
             >
-              Close
+              <span className="bg-primary-3 flex items-center justify-center p-1 lg:gap-x-3 gap-x-0 lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full text-primary-4">
+                <RiSendPlaneLine size={25}/>
+              </span>
+              <span className="capitalize lg:text-base sm:text-[10px] text-primary-3">
+                {loading ? "tracking..." : "track order"}
+              </span>
             </button>
           </div>
+          {/* Modal Popup */}
+      { orderDetails && (
+        <div className="bg-white p-3 shadow-lg border-primary-1 border-[2.5px] mt-[3%] rounded-4xl w-full ">
+
+        {/* Status Progress Bar */}
+        <div className="lg:p-10 sm:p-3 border-primary-1 rounded-2xl w-full">
+          <div className="w-full flex lg:flex-row sm:flex-col items-center justify-between mb-10 gap-y-3">
+            {/* Order Info Section */}
+            <div className="w-full flex gap-x-5 items-center">
+              <div className="lg:w-15 lg:h-15 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                <Image
+                  src='/wash.png'
+                  alt="QuickFix"
+                  width={100}
+                  height={100}
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <h2 className="text-secondary-1 flex lg:gap-x-2 sm:gap-x-1 font-bold lg:text-base sm:text-xs">
+                  <span className="first-letter:capitalize">order ID:</span>
+                  <span>{orderDetails.order_id}</span>
+                </h2>
+              </div>
+            </div>
+
+            {/* View Order Button - Aligned to the Right */}
+            <div 
+              className="w-full flex lg:justify-end sm:justify-start items-center text-primary-1 font-bold lg:gap-x-2 sm:gap-x-1 lg:text-base sm:text-xs capitalize cursor-pointer"
+              onClick={handleModal}
+            >
+              <span>view order</span>
+              <FaArrowRightLong size={20}/>
+            </div>
+          </div>
+
+          <div className="flex flex-col w-full sm:ml-3">
+            {STATUS_STEPS.map((step, index) => {
+              const isActive = getStatusIndex(orderDetails.status) >= index;
+              return (
+                <div key={index} className="flex items-center gap-x-3">
+                  {/* Status Indicator + Line Container */}
+                  <div className="flex flex-col items-center">
+                    {/* Status Circle */}
+                    <div className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${isActive ? "bg-primary-1" : "bg-secondary-1"}`}>
+                      <FaCheck />
+                    </div>
+                    {/* Connecting Line (Hidden for last item) */}
+                    {index !== STATUS_STEPS.length - 1 && (
+                      <div className="w-[2px] h-10 bg-secondary-1"></div>
+                    )}
+                  </div>
+                  {/* Step Label */}
+                  <div className="text-sm text-secondary-1 sm:-mt-8">{step}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+      </div>
       )}
+        </div>
+        {
+          isModalOpen && orderDetails && (
+            <div
+              className="fixed inset-0 bg-primary-3/50 lg:p-0 sm:p-2 bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white lg:p-10 sm:p-3 rounded-4xl shadow-lg lg:w-[60%] sm:w-full ">
+                <div
+                  onClick={handleModal}
+                  className="flex float-end"
+                >
+                  <IoMdCloseCircleOutline size={30}/>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="lg:w-15 lg:h-15 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+                    <Image
+                      src='/wash.png'
+                      alt="QuickFix"
+                      width={100}
+                      height={100}
+                      className="w-full"
+                    />
+                  </div>
+                  <h2 className="text-secondary-1 font-bold flex items-center gap-x-1 lg:text-base sm:text-sm">
+                    <span className="first-letter:capitalize">order ID:</span>
+                    <span>{orderDetails.order_id}</span>
+                  </h2>
+                </div>
+                <div className="lg:py-10 sm:py-5">
+                  <div className="w-full border-2 border-primary-1 rounded-2xl lg:p-7 sm:p-2">
+                    <div>
+                      {orderDetails.items.map((item, index) => (
+                        <div 
+                          key={index}
+                          className="w-full flex items-center justify-between lg:text-lg sm:text-xs lg:py-3 sm:py-1"
+                        >
+                          <h2 className="text-bold capitalize">{item.name}</h2> 
+                          <h2 className="text-primary-2 flex items-center gap-x-2 font-bold text-right">
+                            <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(item.price)}</span>
+                            <span>x</span>
+                            <span>{item.quantity}</span>
+                          </h2>
+                          
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-col items-end text-right lg:text-xl sm:text-sm">
+                      <h2 className="flex justify-end items-center font-bold capitalize text-primary-2">
+                        <span className="mr-2">sub total:</span>
+                        <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(orderDetails.amount)}</span>
+                      </h2>
+                      <h2 className="flex justify-end items-center font-bold capitalize text-primary-2">
+                        <span className="mr-2">delivery fee:</span>
+                        <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(orderDetails.delivery_fee)}</span>
+                      </h2>
+                      <h2 className="flex justify-end items-center font-bold capitalize text-primary-2">
+                        <span className="mr-2">total:</span>
+                        <span className="flex items-center"><TbCurrencyNaira size={20}/>{formatAmountWithCommas(orderDetails.amount + orderDetails.delivery_fee)}</span>
+                      </h2>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
     </div>
   );
 };
