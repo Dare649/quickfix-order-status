@@ -110,9 +110,10 @@ const Home = () => {
               onClick={handleSearch}
               disabled={loading}
             >
-              <span className="bg-primary-3 flex items-center justify-center p-1 lg:gap-x-3 gap-x-0 lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full text-primary-4">
-                <RiSendPlaneLine size={25}/>
+              <span className="bg-primary-3 flex items-center justify-center lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full text-primary-4">
+                <RiSendPlaneLine className="lg:text-[20px] sm:text-[12px]" />
               </span>
+
               <span className="capitalize lg:text-base sm:text-[10px] text-primary-3">
                 {loading ? "tracking..." : "track order"}
               </span>
@@ -154,28 +155,29 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex flex-col w-full sm:ml-3 ">
-            {STATUS_STEPS.map((step, index) => {
-              const isActive = getStatusIndex(orderDetails.status) >= index;
-              return (
-                <div key={index} className="flex items-center gap-x-3">
-                  {/* Status Indicator + Line Container */}
-                  <div className="flex flex-col items-center">
-                    {/* Status Circle */}
-                    <div className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${isActive ? "bg-primary-1" : "bg-secondary-1"}`}>
-                      <FaCheck />
-                    </div>
-                    {/* Connecting Line (Hidden for last item) */}
-                    {index !== STATUS_STEPS.length - 1 && (
-                      <div className="w-[2px] h-10 bg-secondary-1"></div>
-                    )}
+          <div className="flex flex-col w-full sm:ml-3 lg:ml-0">
+          {STATUS_STEPS.map((step, index) => {
+            const isActive = getStatusIndex(orderDetails.status) >= index;
+            return (
+              <div key={index} className="flex items-start gap-x-3">
+                {/* Status Indicator + Line Container */}
+                <div className="flex flex-col items-center">
+                  {/* Status Circle */}
+                  <div className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${isActive ? "bg-primary-1" : "bg-secondary-1"}`}>
+                    <FaCheck />
                   </div>
-                  {/* Step Label */}
-                  <div className="text-sm text-secondary-1 sm:-mt-8">{step}</div>
+                  {/* Connecting Line (Hidden for last item) */}
+                  {index !== STATUS_STEPS.length - 1 && (
+                    <div className="w-[2px] h-10 bg-secondary-1"></div>
+                  )}
                 </div>
-              );
-            })}
-          </div>
+                {/* Step Label */}
+                <div className="text-sm text-secondary-1 mt-1">{step}</div>
+              </div>
+            );
+          })}
+        </div>
+
         </div>
       </div>
       )}
