@@ -83,7 +83,7 @@ const Home = () => {
     <div className="w-full ">
       <div 
         className={`flex flex-col items-center justify-center min-h-screen lg:px-4 sm:px-2 transition-all duration-300  
-          ${orderDetails ? 'lg:w-[60%] sm:w-full mx-auto' : 'w-[80%] mx-auto'}
+          ${orderDetails ? 'lg:w-[60%] sm:w-full mx-auto' : 'lg:w-[80%] sm:w-full mx-auto'}
         `}
       >
           <Image
