@@ -4,6 +4,8 @@ import { useState } from "react";
 import { RiSendPlaneLine } from "react-icons/ri";
 import axiosInstance from "@/service/axios";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { FaArrowRightLong, FaCheck } from "react-icons/fa6";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -81,6 +83,7 @@ const Home = () => {
 
   return (
     <div className="w-full ">
+      <ToastContainer/>
       <div 
         className={`flex flex-col items-center justify-center min-h-screen lg:p-4 sm:p-4 transition-all duration-300  
           ${orderDetails ? 'lg:w-[50%] sm:w-full mx-auto' : 'lg:w-[60%] sm:w-full mx-auto'}
@@ -106,11 +109,11 @@ const Home = () => {
               onChange={(e) => setOrderId(e.target.value)}
             />
             <button
-              className={`lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center justify-center lg:gap-x-2 sm:gap-x-0 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[40%]' : ''}`}
+              className={`lg:w-[25%] sm:w-[40%] p-1 bg-primary-4 lg:gap-x-2 flex items-center justify-center text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[30%]' : ''}`}
               onClick={handleSearch}
               disabled={loading}
             >
-              <span className="bg-primary-3 flex items-center justify-center lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full lg:gap-x-3 sm:gap-x-1 lg:p-3 sm:p-1 text-primary-4">
+              <span className={`-ml-2 bg-primary-3 flex items-center justify-center lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full lg:gap-x-3 sm:gap-x-1 lg:p-3 sm:p-1 text-primary-4 ${orderDetails ? 'ml-1': ""}`}>
                 <RiSendPlaneLine className="lg:text-[20px] sm:text-[12px]" />
               </span>
 
