@@ -110,7 +110,7 @@ const Home = () => {
               onClick={handleSearch}
               disabled={loading}
             >
-              <span className="bg-primary-3 flex items-center justify-center lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full text-primary-4">
+              <span className="bg-primary-3 flex items-center justify-center lg:h-10 lg:w-10 sm:w-5 sm:h-5 rounded-full lg:gap-x-3 sm:gap-x-1 lg:p-3 sm:p-1 text-primary-4">
                 <RiSendPlaneLine className="lg:text-[20px] sm:text-[12px]" />
               </span>
 
