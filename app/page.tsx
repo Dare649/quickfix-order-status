@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { RiSendPlaneLine } from "react-icons/ri";
 import axiosInstance from "@/service/axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { FaArrowRightLong, FaCheck } from "react-icons/fa6";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -35,6 +36,7 @@ interface OrderDetails {
   status: string;
   createdAt: string;
   updatedAt: string;
+  message: string;
 }
 
 const Home = () => {
@@ -49,18 +51,36 @@ const Home = () => {
       toast.error("Please enter a valid order ID.");
       return;
     }
-
+  
     setLoading(true);
     try {
-      const response = await axiosInstance.post<OrderDetails>(`/orders/track`, { order_id: orderId });
-
-      setOrderDetails(response.data); // Store the response data
-    } catch (error) {
-      toast.error("An error occurred while fetching orders.");
+      const response = await axiosInstance.post<OrderDetails>("/orders/track", { order_id: orderId });
+  
+      // If the response has a valid status or another field to display, use that
+      if (response.data?.status) {
+        toast.success(`Order retrieved successfully`); // Show order status in toast
+      } else {
+        toast.success("Order found!"); // A generic message if no specific message exists
+      }
+  
+      // Store the order details
+      setOrderDetails(response.data);
+  
+    } catch (error: any) {
+      // If the error response has a message field, show that in the error toast
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message); // Show the error message from the server
+      } else {
+        // Handle the case where there is no message in the error response
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
 
   // function to open modal
   const handleModal = () => {
@@ -83,6 +103,7 @@ const Home = () => {
 
   return (
     <div className="w-full ">
+      <ToastContainer/>
       <div 
         className={`flex flex-col items-center justify-center min-h-screen lg:p-4 sm:p-4 transition-all duration-300  
           ${orderDetails ? 'lg:w-[50%] sm:w-full mx-auto' : 'lg:w-[60%] sm:w-full mx-auto'}
@@ -105,8 +126,9 @@ const Home = () => {
               className="outline-none border-none w-full bg-transparent focus:ring-0 lg:px-4 sm:px-2 lg:text-base sm:text-[10px]"
               placeholder="Enter order ID EX: 0AFVYY4"
               value={orderId}
-              onChange={(e) => setOrderId(e.target.value)}
+              onChange={(e) => setOrderId(e.target.value.replace(/\s+/g, ''))}  // Removes all spaces
             />
+
             <button
               className={`lg:w-[30%] sm:w-[40%] lg:p-2 sm:p-1 bg-primary-4 flex items-center justify-center lg:gap-x-2 sm:gap-x-0 text-white font-bold rounded-4xl text-center capitalize cursor-pointer ${orderDetails ? 'lg:w-[40%]' : ''}`}
               onClick={handleSearch}
